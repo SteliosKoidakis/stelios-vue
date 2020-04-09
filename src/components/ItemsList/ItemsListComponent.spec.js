@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import ItemsListComponent from './ItemsListComponent';
 
 const computed = {
-  items: () => ([]),
+  getItemsByFilters: () => () => ([]),
 };
 
 describe('Given the Dashboard component', () => {

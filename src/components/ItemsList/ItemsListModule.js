@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-import { checkSearchResultByType } from '@/utils';
+import {
+  checkSearchResultByType,
+  sortNumberByDirection,
+  sortStringByDIrection,
+} from '@/utils';
+import {
+  ITEM_FIELDS,
+  SORT_DIRECTIONS,
+} from '@/constants';
 
 import { isArray } from 'lodash';
 
@@ -20,7 +28,17 @@ export default {
   },
   getters: {
     // todo: searchableFields as part of store state check
-    itemsBySearchText: (state) => (text, searchableFields) => state.items.filter((item) => checkSearchResultByType(item, text, searchableFields)),
+    getItemsByFilters: (state) => ({
+      text, searchableFields, sortBy, sortDirection,
+    }) => {
+      const items = state.items.filter((item) => checkSearchResultByType(item, text, searchableFields));
+      const isDescSortDirection = sortDirection === SORT_DIRECTIONS.desc;
+
+      return items.sort((currentItem, nextItem) => (sortBy === ITEM_FIELDS.price
+        ? sortNumberByDirection(isDescSortDirection, currentItem[sortBy], nextItem[sortBy])
+        : sortStringByDIrection(isDescSortDirection, currentItem[sortBy], nextItem[sortBy])));
+    },
+
   },
   actions: {
     async getItems({ commit }) {

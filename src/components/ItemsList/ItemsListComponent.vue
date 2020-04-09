@@ -1,19 +1,34 @@
 <template>
   <div>
     <BRow>
-      <BCol>
+      <BCol cols="6">
         <BFormInput
           v-model="searchText"
           placeholder="Enter your name"
         />
       </BCol>
-      <BCol>
-        <div>Sort {{ finalItems.length }}</div>
+      <BCol cols="6">
+        <BFormRadioGroup
+          v-model="sortBy"
+          :options="sortOptions"
+          class="mb-3"
+          value-field="value"
+          text-field="value"
+        />
+      </BCol>
+      <BCol cols="6">
+        <BFormRadioGroup
+          v-model="sortDirection"
+          :options="sortDirectionOptions"
+          class="mb-3"
+          value-field="value"
+          text-field="value"
+        />
       </BCol>
     </BRow>
     <BRow>
       <BCol
-        v-for="item in finalItems"
+        v-for="item in filteredItems"
         :key="item.title"
         cols="3"
       >
@@ -27,14 +42,17 @@
   </div>
 </template>
 <script>
-import { mapState, mapGetters } from 'vuex';
-import { BRow, BCol, BFormInput } from 'bootstrap-vue';
-import { SEARCH_FIELDS_ARRAY } from '@/constants';
+import { mapGetters } from 'vuex';
+import {
+  BRow, BCol, BFormRadioGroup, BFormInput,
+} from 'bootstrap-vue';
+import { SEARCH_FIELDS_ARRAY, ITEM_FIELDS, SORT_DIRECTIONS } from '@/constants';
 
 export default {
   name: 'ItemsListComponent',
   components: {
     BCol,
+    BFormRadioGroup,
     BFormInput,
     BRow,
   },
@@ -55,22 +73,33 @@ export default {
   data() {
     return {
       searchText: '',
-      sortingOptions: {
-
-      },
+      sortBy: ITEM_FIELDS.price,
+      sortOptions: [
+        { value: ITEM_FIELDS.title },
+        { value: ITEM_FIELDS.description },
+        { value: ITEM_FIELDS.price },
+        { value: ITEM_FIELDS.email },
+      ],
+      sortDirection: SORT_DIRECTIONS.asc,
+      sortDirectionOptions: [
+        { value: SORT_DIRECTIONS.asc },
+        { value: SORT_DIRECTIONS.desc },
+      ],
     };
   },
   computed: {
-    ...mapState('ItemsListModule', {
-      items: (state) => state.items,
-    }),
-    ...mapGetters('ItemsListModule', ['itemsBySearchText']),
+    ...mapGetters('ItemsListModule', ['getItemsByFilters']),
     filteredItems() {
-      return this.itemsBySearchText(this.searchText, this.searchableFields);
+      return this.getItemsByFilters({
+        text: this.searchText,
+        searchableFields: this.searchableFields,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+      });
     },
-    finalItems() {
-      return this.searchText ? this.filteredItems : this.items;
-    },
+  },
+  created() {
+    this.sortItems = SEARCH_FIELDS_ARRAY;
   },
 };
 </script>

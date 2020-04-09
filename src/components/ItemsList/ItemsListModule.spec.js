@@ -43,7 +43,7 @@ describe('Give ItemsListModule', () => {
       });
     });
   });
-  describe('Give itemsBySearchText getter', () => {
+  describe('Give getItemsByFilters getter', () => {
     describe('when a string text and an array of searchableFields pass', () => {
       it('should trigger checkSearchResultByType', () => {
         const stateWithItems = {
@@ -54,7 +54,7 @@ describe('Give ItemsListModule', () => {
         const text = 'test';
         const searchableFields = ['title'];
 
-        getters.itemsBySearchText(stateWithItems)(text, searchableFields);
+        getters.getItemsByFilters(stateWithItems)(text, searchableFields);
 
         expect(checkSearchResultByType).toHaveBeenCalled();
       });
@@ -71,7 +71,7 @@ describe('Give ItemsListModule', () => {
         const text = 'test';
         const searchableFields = ['title'];
 
-        getters.itemsBySearchText(stateWithItems)(text, searchableFields);
+        getters.getItemsByFilters(stateWithItems)(text, searchableFields);
 
         expect(checkSearchResultByType).toHaveBeenCalledTimes(stateWithItems.items.length);
       });
@@ -89,7 +89,7 @@ describe('Give ItemsListModule', () => {
         const searchableFields = ['title'];
         jest.spyOn(Array.prototype, 'filter');
 
-        getters.itemsBySearchText(stateWithItems)(text, searchableFields);
+        getters.getItemsByFilters(stateWithItems)(text, searchableFields);
 
         expect(Array.prototype.filter).toHaveBeenCalled();
       });
