@@ -1,29 +1,14 @@
 <template>
-  <BContainer>
-    <img
-      alt="Vue logo"
-      src="./assets/logo.png"
-    >
-    <HelloWorld
-      class="app__test"
-      msg="Welcome to Your Vue.js App"
-    />
-    <BButton variant="success">
-      Test
-    </BButton>
-  </BContainer>
+  <Dashboard />
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld';
-import { BButton, BContainer } from 'bootstrap-vue';
+import Dashboard from '@/views/Dashboard/DashboardView';
 
 export default {
   name: 'App',
   components: {
-    BButton,
-    BContainer,
-    HelloWorld,
+    Dashboard,
   },
 };
 </script>
