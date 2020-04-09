@@ -8,18 +8,26 @@
         />
       </BCol>
       <BCol>
-        <div>Sort {{ items.length }}</div>
+        <div>Sort {{ finalItems.length }}</div>
       </BCol>
     </BRow>
     <BRow>
-      <BCol>
-        <div>Liste items</div>
+      <BCol
+        v-for="item in finalItems"
+        :key="item.title"
+        cols="3"
+      >
+        <div>{{ item.title }}</div>
+        <div>{{ item.description }}</div>
+        <div>{{ item.price }}</div>
+        <div>{{ item.email }}</div>
+        <div>{{ item.image }}</div>
       </BCol>
     </BRow>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { BRow, BCol, BFormInput } from 'bootstrap-vue';
 import { SEARCH_FIELDS_ARRAY } from '@/constants';
 
@@ -56,6 +64,13 @@ export default {
     ...mapState('ItemsListModule', {
       items: (state) => state.items,
     }),
+    ...mapGetters('ItemsListModule', ['itemsBySearchText']),
+    filteredItems() {
+      return this.itemsBySearchText(this.searchText, this.searchableFields);
+    },
+    finalItems() {
+      return this.searchText ? this.filteredItems : this.items;
+    },
   },
 };
 </script>

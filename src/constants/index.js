@@ -2,14 +2,14 @@ const SEARCH_FIELDS = {
   title: 'title',
   description: 'description',
   price: 'price',
-  mail: 'mail',
+  email: 'email',
 };
 
 const SEARCH_FIELDS_ARRAY = [
   SEARCH_FIELDS.title,
   SEARCH_FIELDS.description,
   SEARCH_FIELDS.price,
-  SEARCH_FIELDS.mail,
+  SEARCH_FIELDS.email,
 ];
 
 export { SEARCH_FIELDS };
