@@ -2,7 +2,22 @@
   <BContainer>
     <BRow>
       <BCol>
-        <div>FavouritesList</div>
+        <div>
+          <BButton @click="$bvModal.show('favorite-items')">
+            Should Favorite List
+          </BButton>
+
+          <BModal
+            id="favorite-items"
+            title="Favorite items"
+            hide-backdrop
+          >
+            <ItemsListComponent
+              :is-sorting-enabled="false"
+              :is-pagination-enabled="false"
+            />
+          </BModal>
+        </div>
       </BCol>
     </BRow>
     <BRow>
@@ -14,15 +29,19 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
-import { BContainer, BRow, BCol } from 'bootstrap-vue';
+import {
+  BButton, BContainer, BCol, BModal, BRow,
+} from 'bootstrap-vue';
 
 import { ItemsListComponent } from '@/components';
 
 export default {
   name: 'DashboardView',
   components: {
+    BButton,
     BContainer,
     BCol,
+    BModal,
     BRow,
     ItemsListComponent,
   },

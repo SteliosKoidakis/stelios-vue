@@ -7,7 +7,11 @@
           placeholder="Enter your name"
         />
       </BCol>
-      <BCol cols="6">
+
+      <BCol
+        v-if="isSortingEnabled"
+        cols="6"
+      >
         <BFormRadioGroup
           v-model="sortBy"
           :options="sortOptions"
@@ -16,7 +20,10 @@
           text-field="value"
         />
       </BCol>
-      <BCol cols="6">
+      <BCol
+        v-if="isSortingEnabled"
+        cols="6"
+      >
         <BFormRadioGroup
           v-model="sortDirection"
           :options="sortDirectionOptions"
@@ -26,9 +33,25 @@
         />
       </BCol>
     </BRow>
+    <BRow v-if="isPaginationEnabled">
+      <BCol>
+        <BButton
+          :disabled="hidePreviousPageButton"
+          @click="onClickPreviousPageButton"
+        >
+          Previous Page
+        </BButton>
+        <BButton
+          :disabled="hideNextPageButton"
+          @click="onClickNextPageButton"
+        >
+          Next Page
+        </BButton>
+      </BCol>
+    </BRow>
     <BRow>
       <BCol
-        v-for="item in filteredItems"
+        v-for="item in finalItems"
         :key="item.title"
         cols="3"
       >
@@ -39,22 +62,40 @@
         <div>{{ item.image }}</div>
       </BCol>
     </BRow>
+    <BRow v-if="isPaginationEnabled">
+      <BCol>
+        <span>{{ currentPage }} / {{ pagesSize }}</span>
+      </BCol>
+    </BRow>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
 import {
-  BRow, BCol, BFormRadioGroup, BFormInput,
+  INITIAL_PAGE, SEARCH_FIELDS_ARRAY, ITEM_FIELDS, SORT_DIRECTIONS,
+} from '@/constants';
+
+import { mapGetters } from 'vuex';
+
+import {
+  BButton,
+  BCol,
+  BFormRadioGroup,
+  BFormInput,
+  BRow,
+  VBModal,
 } from 'bootstrap-vue';
-import { SEARCH_FIELDS_ARRAY, ITEM_FIELDS, SORT_DIRECTIONS } from '@/constants';
 
 export default {
   name: 'ItemsListComponent',
   components: {
+    BButton,
     BCol,
     BFormRadioGroup,
     BFormInput,
     BRow,
+  },
+  directives: {
+    VBModal,
   },
   props: {
     isFavourite: {
@@ -68,6 +109,14 @@ export default {
     isSortingEnabled: {
       type: Boolean,
       default: true,
+    },
+    isPaginationEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    itemsPerPage: {
+      type: Number,
+      default: 5,
     },
   },
   data() {
@@ -85,6 +134,7 @@ export default {
         { value: SORT_DIRECTIONS.asc },
         { value: SORT_DIRECTIONS.desc },
       ],
+      currentPage: INITIAL_PAGE,
     };
   },
   computed: {
@@ -97,9 +147,45 @@ export default {
         sortDirection: this.sortDirection,
       });
     },
+    pagesSize() {
+      // todo: to be tested ,this exception
+      if (!this.filteredItems.length) {
+        return INITIAL_PAGE;
+      }
+      return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+    },
+    paginatedItems() {
+      const firstPaginatedItem = (this.currentPage - 1) * this.itemsPerPage;
+      const lastPaginatedItem = firstPaginatedItem + this.itemsPerPage;
+
+      return this.filteredItems.slice(firstPaginatedItem, lastPaginatedItem);
+    },
+    finalItems() {
+      return this.isPaginationEnabled ? this.paginatedItems : this.filteredItems;
+    },
+    hidePreviousPageButton() {
+      return this.currentPage === 1;
+    },
+    hideNextPageButton() {
+      return this.pagesSize === this.currentPage;
+    },
+  },
+  watch: {
+    // todo: to be tested
+    searchText() {
+      this.currentPage = 1;
+    },
   },
   created() {
     this.sortItems = SEARCH_FIELDS_ARRAY;
+  },
+  methods: {
+    onClickNextPageButton() {
+      this.currentPage += 1;
+    },
+    onClickPreviousPageButton() {
+      this.currentPage -= 1;
+    },
   },
 };
 </script>
