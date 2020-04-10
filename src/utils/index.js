@@ -1,20 +1,29 @@
-import { find, lowerCase } from 'lodash';
+import { SORT_DIRECTIONS } from '@/constants';
 
-const checkSearchResultByType = (item, text, searchableFields) => find(searchableFields,
+import {
+  some,
+  lowerCase,
+} from 'lodash';
+
+const checkSearchResultByType = (item, text, searchableFields) => some(searchableFields,
   (searchableField) => lowerCase(item[searchableField]).indexOf(lowerCase(text)) > -1);
 
-const sortNumber = (currentItem, nextItem) => parseFloat(currentItem) - parseFloat(nextItem);
+const sortNumber = ({ currentItem, nextItem }) => parseFloat(currentItem) - parseFloat(nextItem);
 
-const sortString = (currentItem, nextItem) => ((currentItem > nextItem) ? 1 : -1);
+const sortString = ({ currentItem, nextItem }) => ((currentItem > nextItem) ? 1 : -1);
 
-const sortNumberByDirection = (isDescSortDirection, currentItem, nextItem) => (isDescSortDirection ? sortNumber(nextItem, currentItem) : sortNumber(currentItem, nextItem));
-
-const sortStringByDIrection = (isDescSortDirection, currentItem, nextItem) => (isDescSortDirection ? sortString(nextItem, currentItem) : sortString(currentItem, nextItem));
+const getObjectByDirection = ({
+  isDescSortDirection = SORT_DIRECTIONS.asc,
+  currentItem,
+  nextItem,
+}) => ({
+  currentItem: isDescSortDirection ? nextItem : currentItem,
+  nextItem: isDescSortDirection ? currentItem : nextItem,
+});
 
 export {
   checkSearchResultByType,
   sortNumber,
   sortString,
-  sortNumberByDirection,
-  sortStringByDIrection
+  getObjectByDirection
 };

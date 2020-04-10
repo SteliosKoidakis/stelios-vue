@@ -1,14 +1,15 @@
-import axios from 'axios';
-
 import {
   checkSearchResultByType,
-  sortNumberByDirection,
-  sortStringByDIrection,
+  sortNumber,
+  sortString,
+  getObjectByDirection,
 } from '@/utils';
 import {
   ITEM_FIELDS,
   SORT_DIRECTIONS,
 } from '@/constants';
+
+import axios from 'axios';
 
 import { isArray } from 'lodash';
 
@@ -28,6 +29,7 @@ export default {
   },
   getters: {
     // todo: searchableFields as part of store state check
+    // todo: put defaults
     getItemsByFilters: (state) => ({
       text, searchableFields, sortBy, sortDirection,
     }) => {
@@ -35,8 +37,21 @@ export default {
       const isDescSortDirection = sortDirection === SORT_DIRECTIONS.desc;
 
       return items.sort((currentItem, nextItem) => (sortBy === ITEM_FIELDS.price
-        ? sortNumberByDirection(isDescSortDirection, currentItem[sortBy], nextItem[sortBy])
-        : sortStringByDIrection(isDescSortDirection, currentItem[sortBy], nextItem[sortBy])));
+        ? sortNumber(
+          getObjectByDirection({
+            isDescSortDirection,
+            currentItem: currentItem[sortBy],
+            nextItem: nextItem[sortBy],
+          }),
+        )
+        : sortString(
+          getObjectByDirection({
+            isDescSortDirection,
+            currentItem: currentItem[sortBy],
+            nextItem: nextItem[sortBy],
+          }),
+        )
+      ));
     },
 
   },
