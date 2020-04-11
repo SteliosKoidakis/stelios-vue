@@ -7,7 +7,6 @@
           placeholder="Enter your name"
         />
       </BCol>
-
       <BCol
         v-if="isSortingEnabled"
         cols="6"

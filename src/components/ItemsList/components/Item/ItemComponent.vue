@@ -7,21 +7,21 @@
       :src="image"
       class="rounded img-fluid"
     >
-    <div v-if="title">
+    <h4 v-if="title">
       {{ title }}
-    </div>
-    <div
+    </h4>
+    <p
       v-if="description"
       class="flex-grow-1"
     >
       {{ description }}
-    </div>
-    <div v-if="price">
+    </p>
+    <p v-if="price">
       {{ price }}
-    </div>
-    <div v-if="email">
+    </p>
+    <p v-if="email">
       {{ email }}
-    </div>
+    </p>
     <BButton
       :variant="isFavorite ? 'success' : 'light'"
       @click="onFavoriteItem"
