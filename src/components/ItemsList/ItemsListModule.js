@@ -9,6 +9,7 @@ import {
 import {
   ITEM_FIELDS,
   SORT_DIRECTIONS,
+  SEARCH_FIELDS_ARRAY,
 } from '@/constants';
 
 import axios from 'axios';
@@ -41,10 +42,11 @@ export default {
     },
   },
   getters: {
-    // todo: searchableFields as part of store state check
-    // todo: put defaults
     getItemsByFilters: (state) => ({
-      text, searchableFields, sortBy, sortDirection,
+      text = '',
+      searchableFields = SEARCH_FIELDS_ARRAY,
+      sortBy = SEARCH_FIELDS_ARRAY.title,
+      sortDirection = SORT_DIRECTIONS.asc,
     }) => {
       const items = state.items.filter((item) => checkSearchResultByType(item, text, searchableFields));
       const isDescSortDirection = sortDirection === SORT_DIRECTIONS.desc;

@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 
 import { isArray } from 'lodash';
 
+import { INITIAL_PAGE } from '@/constants';
 import ItemsListComponent from './ItemsListComponent';
 
 const items = [
@@ -16,7 +17,7 @@ const methods = {
   toggleFavoriteItem: () => jest.fn(),
 };
 
-describe('Given the Dashboard component', () => {
+describe('Given the ItemsList component', () => {
   let wrapper;
   beforeEach(() => {
     wrapper = shallowMount(ItemsListComponent, {
@@ -42,6 +43,17 @@ describe('Given the Dashboard component', () => {
       it('should be qual with filteredItems.length / itemsPerPage', () => {
         const expectedResult = Math.ceil(wrapper.vm.filteredItems.length / wrapper.vm.itemsPerPage);
         expect(wrapper.vm.pagesSize).toEqual(expectedResult);
+      });
+    });
+    describe('when filteredItems has not rength', () => {
+      it('should return INITIAL_PAGE', () => {
+        wrapper = shallowMount(ItemsListComponent, {
+          computed: {
+            filteredItems: () => [],
+          },
+          methods,
+        });
+        expect(wrapper.vm.pagesSize).toEqual(INITIAL_PAGE);
       });
     });
   });
@@ -100,6 +112,20 @@ describe('Given the Dashboard component', () => {
             currentPage: 2,
           });
           expect(wrapper.vm.hideNextPageButton).toBe(false);
+        });
+      });
+    });
+    describe('given searchText watcher', () => {
+      describe('when searchText change', () => {
+        it('should set current page equal to 1', async () => {
+          wrapper.setData({
+            currentPage: 2,
+          });
+          expect(wrapper.vm.currentPage).toEqual(2);
+          await wrapper.setData({
+            searchText: 'Test',
+          });
+          expect(wrapper.vm.currentPage).toEqual(1);
         });
       });
     });

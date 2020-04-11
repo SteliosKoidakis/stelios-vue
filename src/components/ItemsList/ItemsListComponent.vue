@@ -76,7 +76,11 @@
 </template>
 <script>
 import {
-  INITIAL_PAGE, SEARCH_FIELDS_ARRAY, ITEM_FIELDS, SORT_DIRECTIONS,
+  INITIAL_PAGE,
+  SEARCH_FIELDS_ARRAY,
+  ITEM_FIELDS,
+  SORT_DIRECTIONS,
+  VUEX_MODULES,
 } from '@/constants';
 
 import { mapGetters, mapActions } from 'vuex';
@@ -146,7 +150,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('ItemsListModule', ['getItemsByFilters']),
+    ...mapGetters(VUEX_MODULES.ItemsListModule, ['getItemsByFilters']),
     filteredItems() {
       return this.getItemsByFilters({
         text: this.searchText,
@@ -156,7 +160,6 @@ export default {
       });
     },
     pagesSize() {
-      // todo: to be tested ,this exception
       if (!this.filteredItems.length) {
         return INITIAL_PAGE;
       }
@@ -182,7 +185,6 @@ export default {
     },
   },
   watch: {
-    // todo: to be tested
     searchText() {
       this.currentPage = 1;
     },
@@ -191,8 +193,7 @@ export default {
     this.sortItems = SEARCH_FIELDS_ARRAY;
   },
   methods: {
-    // todo: use const
-    ...mapActions('ItemsListModule', ['toggleFavoriteItem']),
+    ...mapActions(VUEX_MODULES.ItemsListModule, ['toggleFavoriteItem']),
     onClickNextPageButton() {
       this.currentPage += 1;
     },

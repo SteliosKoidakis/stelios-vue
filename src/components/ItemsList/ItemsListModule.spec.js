@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   checkSearchResultByType,
   getObjectByDirection,
@@ -13,6 +14,8 @@ jest.mock('@/utils', () => ({
   sortString: jest.fn(),
   sortNumber: jest.fn(),
 }));
+
+jest.mock('axios');
 
 describe('Given ItemsListModule', () => {
   const {
@@ -37,6 +40,8 @@ describe('Given ItemsListModule', () => {
   const mockInitialState = {
     items: [],
   };
+
+  const commit = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -147,10 +152,36 @@ describe('Given ItemsListModule', () => {
       });
     });
   });
+  describe('given getItems action', () => {
+    describe('when is called and axios', () => {
+      it('should trigger commit with setItems and response.items on success', async () => {
+        const response = {
+          data: {
+            items: [{ title: 'title' }],
+          },
+        };
+        axios.get.mockImplementationOnce(() => Promise.resolve(response));
+
+        await actions.getItems({
+          commit,
+        });
+
+        expect(commit).toHaveBeenCalledWith('setItems', response.data.items);
+      });
+      it('should trigger commit with setItems and [] on error', async () => {
+        axios.get.mockImplementationOnce(() => Promise.reject(new Error()));
+
+        await actions.getItems({
+          commit,
+        });
+
+        expect(commit).toHaveBeenCalledWith('setItems', []);
+      });
+    });
+  });
   describe('given toggleFavoriteItem action', () => {
     describe('when a id pass', () => {
       it('should trigger commit with toggleFavorite and correct index', () => {
-        const commit = jest.fn();
         const expectedIndex = 1;
         const id = stateWithItems.items[expectedIndex].title;
         actions.toggleFavoriteItem({

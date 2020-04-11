@@ -1,8 +1,9 @@
 import ItemsListModule from '@/components/ItemsList/ItemsListModule';
+import { VUEX_MODULES } from '@/constants';
 
 export default {
   namespaced: true,
   modules: {
-    ItemsListModule,
+    [VUEX_MODULES.ItemsListModule]: ItemsListModule,
   },
 };

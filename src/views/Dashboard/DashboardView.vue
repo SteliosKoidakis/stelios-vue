@@ -35,6 +35,7 @@ import {
 } from 'bootstrap-vue';
 
 import { ItemsListComponent } from '@/components';
+import { VUEX_MODULES } from '@/constants';
 
 export default {
   name: 'DashboardView',
@@ -46,12 +47,11 @@ export default {
     BRow,
     ItemsListComponent,
   },
-  // todo: move this oncreated() of ItemsListComponent ?¿
   async created() {
     await this.getItems();
   },
   methods: {
-    ...mapActions('ItemsListModule', ['getItems']),
+    ...mapActions(VUEX_MODULES.ItemsListModule, ['getItems']),
   },
 };
 </script>

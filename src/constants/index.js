@@ -19,9 +19,14 @@ const SEARCH_FIELDS_ARRAY = [
 
 const INITIAL_PAGE = 1;
 
+const VUEX_MODULES = {
+  ItemsListModule: 'ItemsListModule',
+};
+
 export {
   INITIAL_PAGE,
   ITEM_FIELDS,
   SEARCH_FIELDS_ARRAY,
-  SORT_DIRECTIONS
+  SORT_DIRECTIONS,
+  VUEX_MODULES
 };
