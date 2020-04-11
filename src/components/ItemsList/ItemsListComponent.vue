@@ -51,15 +51,20 @@
     </BRow>
     <BRow>
       <BCol
-        v-for="item in finalItems"
+        v-for="item in isFavouriteList ? favouriteList : finalItems"
         :key="item.title"
-        cols="3"
+        cols="4"
+        class="d-flex pb-4"
       >
-        <div>{{ item.title }}</div>
-        <div>{{ item.description }}</div>
-        <div>{{ item.price }}</div>
-        <div>{{ item.email }}</div>
-        <div>{{ item.image }}</div>
+        <ItemComponent
+          :title="item.title"
+          :description="item.description"
+          :price="item.price"
+          :email="item.email"
+          :image="item.image"
+          :is-favorite="item.isFavorite"
+          :on-favorite-item="() =>toggleFavoriteItem(item.title)"
+        />
       </BCol>
     </BRow>
     <BRow v-if="isPaginationEnabled">
@@ -74,7 +79,7 @@ import {
   INITIAL_PAGE, SEARCH_FIELDS_ARRAY, ITEM_FIELDS, SORT_DIRECTIONS,
 } from '@/constants';
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import {
   BButton,
@@ -85,6 +90,8 @@ import {
   VBModal,
 } from 'bootstrap-vue';
 
+import ItemComponent from './components/Item/ItemComponent';
+
 export default {
   name: 'ItemsListComponent',
   components: {
@@ -93,12 +100,13 @@ export default {
     BFormRadioGroup,
     BFormInput,
     BRow,
+    ItemComponent,
   },
   directives: {
     VBModal,
   },
   props: {
-    isFavourite: {
+    isFavouriteList: {
       type: Boolean,
       default: false,
     },
@@ -160,6 +168,9 @@ export default {
 
       return this.filteredItems.slice(firstPaginatedItem, lastPaginatedItem);
     },
+    favouriteList() {
+      return this.filteredItems.filter((item) => item.isFavorite);
+    },
     finalItems() {
       return this.isPaginationEnabled ? this.paginatedItems : this.filteredItems;
     },
@@ -180,6 +191,8 @@ export default {
     this.sortItems = SEARCH_FIELDS_ARRAY;
   },
   methods: {
+    // todo: use const
+    ...mapActions('ItemsListModule', ['toggleFavoriteItem']),
     onClickNextPageButton() {
       this.currentPage += 1;
     },

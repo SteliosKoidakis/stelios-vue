@@ -15,6 +15,7 @@
             <ItemsListComponent
               :is-sorting-enabled="false"
               :is-pagination-enabled="false"
+              is-favourite-list
             />
           </BModal>
         </div>
@@ -45,6 +46,7 @@ export default {
     BRow,
     ItemsListComponent,
   },
+  // todo: move this oncreated() of ItemsListComponent ?¿
   async created() {
     await this.getItems();
   },

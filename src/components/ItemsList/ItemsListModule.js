@@ -1,3 +1,5 @@
+import Vue from 'vue';
+import { isArray, isNumber } from 'lodash';
 import {
   checkSearchResultByType,
   sortNumber,
@@ -11,8 +13,6 @@ import {
 
 import axios from 'axios';
 
-import { isArray } from 'lodash';
-
 export default {
   namespaced: true,
   state: {
@@ -25,6 +25,19 @@ export default {
         return;
       }
       state.items = items;
+    },
+    toggleFavorite(state, index) {
+      if (!isNumber(index)) {
+        return;
+      }
+      const item = state.items[index];
+
+      const newItem = {
+        ...item,
+        isFavorite: item && !item.isFavorite,
+      };
+
+      Vue.set(state.items, index, newItem);
     },
   },
   getters: {
@@ -65,6 +78,11 @@ export default {
       } catch {
         commit('setItems', []);
       }
+    },
+    toggleFavoriteItem({ commit, state }, id) {
+      const index = state.items.findIndex((item) => item.title === id);
+
+      commit('toggleFavorite', index);
     },
   },
 };

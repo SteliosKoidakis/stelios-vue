@@ -19,6 +19,7 @@ describe('Given ItemsListModule', () => {
     state,
     mutations,
     getters,
+    actions,
   } = ItemsListModule;
 
   const stateWithItems = {
@@ -60,6 +61,27 @@ describe('Given ItemsListModule', () => {
       it('should mutate the state with an empty array', () => {
         mutations.setItems(state, 'test');
         expect(state.items).toEqual([]);
+      });
+    });
+  });
+  describe('given toggleFavorite mutation', () => {
+    describe('when an index as a parameter', () => {
+      it('should toggle the isFavorite correct', () => {
+        const mockItems = [{
+          title: 'test',
+          isFavorite: false,
+        }];
+        mutations.toggleFavorite(stateWithItems, 0);
+        expect(stateWithItems.items[0].isFavorite).toEqual(!mockItems[0].isFavorite);
+      });
+    });
+    describe('when an unexpected parameter pass', () => {
+      it('should return the same state items', () => {
+        const itemsBefore = stateWithItems.items;
+        mutations.toggleFavorite(stateWithItems, {});
+        expect(stateWithItems.items).toMatchObject(itemsBefore);
+        mutations.toggleFavorite(stateWithItems, []);
+        expect(stateWithItems.items).toMatchObject(itemsBefore);
       });
     });
   });
@@ -122,6 +144,22 @@ describe('Given ItemsListModule', () => {
           sortBy: [],
           sortDirection: [undefined],
         });
+      });
+    });
+  });
+  describe('given toggleFavoriteItem action', () => {
+    describe('when a id pass', () => {
+      it('should trigger commit with toggleFavorite and correct index', () => {
+        const commit = jest.fn();
+        const expectedIndex = 1;
+        const id = stateWithItems.items[expectedIndex].title;
+        actions.toggleFavoriteItem({
+          state: stateWithItems,
+          commit,
+        }, id);
+
+        expect(commit).toHaveBeenCalled();
+        expect(commit).toHaveBeenCalledWith('toggleFavorite', expectedIndex);
       });
     });
   });

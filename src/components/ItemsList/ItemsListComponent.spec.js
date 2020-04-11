@@ -6,11 +6,14 @@ import ItemsListComponent from './ItemsListComponent';
 
 const items = [
   { title: 'My title 1' },
-  { title: 'My title 2' },
+  { title: 'My title 2', isFavorite: true },
 ];
 
 const computed = {
   getItemsByFilters: () => () => (items),
+};
+const methods = {
+  toggleFavoriteItem: () => jest.fn(),
 };
 
 describe('Given the Dashboard component', () => {
@@ -18,6 +21,7 @@ describe('Given the Dashboard component', () => {
   beforeEach(() => {
     wrapper = shallowMount(ItemsListComponent, {
       computed,
+      methods,
     });
   });
 
@@ -48,6 +52,13 @@ describe('Given the Dashboard component', () => {
       });
       it('should return an array', () => {
         expect(isArray(wrapper.vm.paginatedItems)).toBe(true);
+      });
+    });
+  });
+  describe('given favouriteList', () => {
+    describe('when we have a list of items', () => {
+      it('should return the favorites only', () => {
+        expect(wrapper.vm.favouriteList.length).toBe(1);
       });
     });
   });
