@@ -23,7 +23,10 @@ const VUEX_MODULES = {
   ItemsListModule: 'ItemsListModule',
 };
 
+const DELAY = 400;
+
 export {
+  DELAY,
   INITIAL_PAGE,
   ITEM_FIELDS,
   SEARCH_FIELDS_ARRAY,

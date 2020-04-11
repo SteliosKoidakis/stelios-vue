@@ -52,7 +52,7 @@
       <BCol
         v-for="item in isFavouriteList ? favouriteList : finalItems"
         :key="item.title"
-        cols="4"
+        md="4"
         class="d-flex pb-4"
       >
         <ItemComponent
@@ -62,7 +62,7 @@
           :email="item.email"
           :image="item.image"
           :is-favorite="item.isFavorite"
-          :on-favorite-item="() =>toggleFavoriteItem(item.title)"
+          :on-favorite-item="() =>onClickFavoriteItem(item.title)"
         />
       </BCol>
     </BRow>
@@ -74,16 +74,8 @@
   </div>
 </template>
 <script>
-import {
-  INITIAL_PAGE,
-  SEARCH_FIELDS_ARRAY,
-  ITEM_FIELDS,
-  SORT_DIRECTIONS,
-  VUEX_MODULES,
-} from '@/constants';
-
+import { debounce } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
-
 import {
   BButton,
   BCol,
@@ -92,6 +84,15 @@ import {
   BRow,
   VBModal,
 } from 'bootstrap-vue';
+
+import {
+  DELAY,
+  INITIAL_PAGE,
+  SEARCH_FIELDS_ARRAY,
+  ITEM_FIELDS,
+  SORT_DIRECTIONS,
+  VUEX_MODULES,
+} from '@/constants';
 
 import ItemComponent from './components/Item/ItemComponent';
 
@@ -146,18 +147,11 @@ export default {
         { value: SORT_DIRECTIONS.desc },
       ],
       currentPage: INITIAL_PAGE,
+      filteredItems: [],
     };
   },
   computed: {
     ...mapGetters(VUEX_MODULES.ItemsListModule, ['getItemsByFilters']),
-    filteredItems() {
-      return this.getItemsByFilters({
-        text: this.searchText,
-        searchableFields: this.searchableFields,
-        sortBy: this.sortBy,
-        sortDirection: this.sortDirection,
-      });
-    },
     pagesSize() {
       if (!this.filteredItems.length) {
         return INITIAL_PAGE;
@@ -186,10 +180,23 @@ export default {
   watch: {
     searchText() {
       this.currentPage = 1;
+      this.getFilteredItems();
+    },
+    searchableFields() {
+      this.getFilteredItems();
+    },
+    sortBy() {
+      this.getFilteredItems();
+    },
+    sortDirection() {
+      this.getFilteredItems();
     },
   },
   created() {
     this.sortItems = SEARCH_FIELDS_ARRAY;
+  },
+  mounted() {
+    this.getFilteredItems();
   },
   methods: {
     ...mapActions(VUEX_MODULES.ItemsListModule, ['toggleFavoriteItem']),
@@ -198,6 +205,18 @@ export default {
     },
     onClickPreviousPageButton() {
       this.currentPage -= 1;
+    },
+    getFilteredItems: debounce(function debouncegetFilteredItems() {
+      this.filteredItems = this.getItemsByFilters({
+        text: this.searchText,
+        searchableFields: this.searchableFields,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+      });
+    }, DELAY),
+    onClickFavoriteItem(title) {
+      this.toggleFavoriteItem(title);
+      this.getFilteredItems();
     },
   },
 };

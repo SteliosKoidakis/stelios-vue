@@ -14,7 +14,8 @@ const computed = {
   getItemsByFilters: () => () => (items),
 };
 const methods = {
-  toggleFavoriteItem: () => jest.fn(),
+  toggleFavoriteItem: jest.fn(),
+  getFilteredItems: jest.fn(),
 };
 
 describe('Given the ItemsList component', () => {
@@ -31,34 +32,27 @@ describe('Given the ItemsList component', () => {
       expect(wrapper).toBeDefined();
     });
   });
-  describe('given filteredItems', () => {
-    describe('when it called', () => {
-      it('should be qual with the getItemsByFilters getter result', () => {
-        expect(wrapper.vm.filteredItems).toEqual(computed.getItemsByFilters()());
-      });
-    });
-  });
   describe('given pagesSize', () => {
     describe('when it called', () => {
       it('should be qual with filteredItems.length / itemsPerPage', () => {
+        wrapper.setData({
+          filteredItems: items,
+        });
         const expectedResult = Math.ceil(wrapper.vm.filteredItems.length / wrapper.vm.itemsPerPage);
         expect(wrapper.vm.pagesSize).toEqual(expectedResult);
       });
     });
     describe('when filteredItems has not rength', () => {
       it('should return INITIAL_PAGE', () => {
-        wrapper = shallowMount(ItemsListComponent, {
-          computed: {
-            filteredItems: () => [],
-          },
-          methods,
+        wrapper.setData({
+          filteredItems: [],
         });
         expect(wrapper.vm.pagesSize).toEqual(INITIAL_PAGE);
       });
     });
   });
   describe('given paginatedItems', () => {
-    describe('when we have a list of items by getItemsByFilters getter', () => {
+    describe('when we have a list of items', () => {
       it('should return an array with <= the length of itemsPerPage', () => {
         expect(wrapper.vm.paginatedItems.length + 1).toBeLessThanOrEqual(wrapper.vm.itemsPerPage);
       });
@@ -70,6 +64,9 @@ describe('Given the ItemsList component', () => {
   describe('given favouriteList', () => {
     describe('when we have a list of items', () => {
       it('should return the favorites only', () => {
+        wrapper.setData({
+          filteredItems: items,
+        });
         expect(wrapper.vm.favouriteList.length).toBe(1);
       });
     });
@@ -127,6 +124,12 @@ describe('Given the ItemsList component', () => {
           });
           expect(wrapper.vm.currentPage).toEqual(1);
         });
+        it('should trigger getFilteredItems method', async () => {
+          await wrapper.setData({
+            currentPage: 2,
+          });
+          expect(methods.getFilteredItems).toHaveBeenCalled();
+        });
       });
     });
     describe('given onClickNextPageButton', () => {
@@ -140,7 +143,7 @@ describe('Given the ItemsList component', () => {
         });
       });
     });
-    describe('given onClickPreviousPageButton', () => {
+    describe('given onClickPreviousPageButton method', () => {
       describe('when is called', () => {
         it('should return currentPage - 1', async () => {
           wrapper.setData({
@@ -148,6 +151,15 @@ describe('Given the ItemsList component', () => {
           });
           wrapper.vm.onClickPreviousPageButton();
           expect(wrapper.vm.currentPage).toEqual(1);
+        });
+      });
+    });
+    describe('given onClickFavoriteItem', () => {
+      describe('when is called', () => {
+        it('should triggert toggleFavoriteItem with getFilteredItems', () => {
+          wrapper.vm.onClickFavoriteItem();
+          expect(methods.toggleFavoriteItem).toHaveBeenCalled();
+          expect(methods.getFilteredItems).toHaveBeenCalled();
         });
       });
     });
