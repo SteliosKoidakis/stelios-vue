@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Given the ItemsList component when props isFavorite is true should render Bbutton with success variant and Unlike text 1`] = `
+<div
+  class="ItemComponent d-flex flex-column"
+>
+  <img
+    alt="title"
+    class="rounded img-fluid"
+    src="image"
+    title="title"
+  />
+   
+  <div>
+    
+    title
+  
+  </div>
+   
+  <div
+    class="flex-grow-1"
+  >
+    
+    description
+  
+  </div>
+   
+  <div>
+    
+    price
+  
+  </div>
+   
+  <div>
+    
+    email
+  
+  </div>
+   
+  <bbutton-stub
+    event="click"
+    routertag="a"
+    tag="button"
+    target="_self"
+    type="button"
+    variant="success"
+  >
+    
+    Unlike
+  
+  </bbutton-stub>
+</div>
+`;
+
+exports[`Given the ItemsList component when props pass should render the correct output 1`] = `
+<div
+  class="ItemComponent d-flex flex-column"
+>
+  <img
+    alt="title"
+    class="rounded img-fluid"
+    src="image"
+    title="title"
+  />
+   
+  <div>
+    
+    title
+  
+  </div>
+   
+  <div
+    class="flex-grow-1"
+  >
+    
+    description
+  
+  </div>
+   
+  <div>
+    
+    price
+  
+  </div>
+   
+  <div>
+    
+    email
+  
+  </div>
+   
+  <bbutton-stub
+    event="click"
+    routertag="a"
+    tag="button"
+    target="_self"
+    type="button"
+    variant="light"
+  >
+    
+    Like
+  
+  </bbutton-stub>
+</div>
+`;

@@ -134,7 +134,7 @@ export default {
   data() {
     return {
       searchText: '',
-      sortBy: ITEM_FIELDS.price,
+      sortBy: ITEM_FIELDS.title,
       sortOptions: [
         { value: ITEM_FIELDS.title },
         { value: ITEM_FIELDS.description },
