@@ -1,4 +1,4 @@
-import ItemsListModule from '@/components/ItemsList/ItemsListModule';
+import ItemsListModule from '@/components/ItemsList/store/ItemsListModule';
 import { VUEX_MODULES } from '@/constants';
 
 export default {

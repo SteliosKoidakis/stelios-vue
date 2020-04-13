@@ -1,13 +1,14 @@
 <template>
   <div class="ItemsListComponent">
     <BRow class="ItemsListComponent__row">
+      <!-- could happen through a prop to be more functional -->
       <BCol
-        md="4"
+        :md="isFavouriteList ? '12' : '6'"
         class="ItemsListComponent__search-input"
       >
         <BFormInput
-          v-model="searchText"
           placeholder="Search for a product"
+          @input="debounceInput"
         />
       </BCol>
     </BRow>
@@ -75,8 +76,9 @@
     </BRow>
     <BRow class="ItemsListComponent__row">
       <BCol
-        v-for="item in isFavouriteList ? favouriteList : finalItems"
+        v-for="item in isFavouriteList ? favouriteList : itemsByListType"
         :key="item.title"
+        md="3"
       >
         <ItemComponent
           :title="item.title"
@@ -86,23 +88,19 @@
           :image="item.image"
           :is-favorite="item.isFavorite"
           :on-favorite-item="() =>onClickFavoriteItem(item.title)"
+          :is-unlike-enabled="isFavouriteList"
         />
+      </BCol>
+      <BCol
+        v-if="isListEmpty"
+        cols="12"
+      >
+        No results found
       </BCol>
     </BRow>
   </div>
 </template>
 <script>
-import { debounce } from 'lodash';
-import { mapGetters, mapActions } from 'vuex';
-import {
-  BButton,
-  BCol,
-  BFormRadioGroup,
-  BFormInput,
-  BRow,
-  VBModal,
-} from 'bootstrap-vue';
-
 import {
   DELAY,
   INITIAL_PAGE,
@@ -111,6 +109,19 @@ import {
   SORT_DIRECTIONS,
   VUEX_MODULES,
 } from '@/constants';
+
+import { debounce } from 'lodash';
+
+import { mapGetters, mapActions, mapState } from 'vuex';
+
+import {
+  BButton,
+  BCol,
+  BFormRadioGroup,
+  BFormInput,
+  BRow,
+  VBModal,
+} from 'bootstrap-vue';
 
 import ItemComponent from './components/Item/ItemComponent';
 
@@ -165,11 +176,13 @@ export default {
         { value: SORT_DIRECTIONS.desc },
       ],
       currentPage: INITIAL_PAGE,
-      filteredItems: [],
     };
   },
   computed: {
     ...mapGetters(VUEX_MODULES.ItemsListModule, ['getItemsByFilters']),
+    ...mapState(VUEX_MODULES.ItemsListModule, {
+      statusIsLoaded: (state) => state.isLoaded,
+    }),
     pagesSize() {
       if (!this.filteredItems.length) {
         return INITIAL_PAGE;
@@ -185,7 +198,7 @@ export default {
     favouriteList() {
       return this.filteredItems.filter((item) => item.isFavorite);
     },
-    finalItems() {
+    itemsByListType() {
       return this.isPaginationEnabled ? this.paginatedItems : this.filteredItems;
     },
     hidePreviousPageButton() {
@@ -194,25 +207,25 @@ export default {
     hideNextPageButton() {
       return this.pagesSize === this.currentPage;
     },
-  },
-  watch: {
-    searchText() {
-      this.currentPage = 1;
-      this.getDebouncedFilteredItems();
+    filteredItems() {
+      return this.getItemsByFilters({
+        text: this.searchText,
+        searchableFields: this.searchableFields,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+      });
     },
-    sortBy() {
-      this.getFilteredItems();
-    },
-    sortDirection() {
-      this.getFilteredItems();
+    isListEmpty() {
+      return this.isFavouriteList ? !this.favouriteList.length : !this.itemsByListType.length;
     },
   },
   created() {
     this.sortItems = SEARCH_FIELDS_ARRAY;
   },
   async mounted() {
-    await this.getItems();
-    this.getFilteredItems();
+    if (!this.statusIsLoaded) {
+      await this.getItems();
+    }
   },
   methods: {
     ...mapActions(VUEX_MODULES.ItemsListModule, ['toggleFavoriteItem', 'getItems']),
@@ -222,21 +235,12 @@ export default {
     onClickPreviousPageButton() {
       this.currentPage -= 1;
     },
-    getDebouncedFilteredItems: debounce(function debounceFilteredItems() {
-      this.getFilteredItems();
-    }, DELAY),
-    getFilteredItems() {
-      this.filteredItems = this.getItemsByFilters({
-        text: this.searchText,
-        searchableFields: this.searchableFields,
-        sortBy: this.sortBy,
-        sortDirection: this.sortDirection,
-      });
-    },
     onClickFavoriteItem(title) {
       this.toggleFavoriteItem(title);
-      this.getFilteredItems();
     },
+    debounceInput: debounce(function debounceInput(text) {
+      this.searchText = text;
+    }, DELAY),
   },
 };
 </script>

@@ -1,7 +1,6 @@
 import { shallowMount } from '@vue/test-utils';
 
 import { debounce } from 'lodash';
-
 import { INITIAL_PAGE } from '@/constants';
 import ItemsListComponent from './ItemsListComponent';
 
@@ -14,12 +13,13 @@ const items = [
 
 const computed = {
   getItemsByFilters: () => () => (items),
+  statusIsLoaded: () => () => false,
+  filteredItems: () => (items),
 };
 const methods = {
   toggleFavoriteItem: jest.fn(),
-  getDebouncedFilteredItems: jest.fn(),
-  getFilteredItems: jest.fn(),
   getItems: jest.fn(),
+  debounceInput: jest.fn(),
 };
 
 describe('Given the ItemsList component', () => {
@@ -39,17 +39,18 @@ describe('Given the ItemsList component', () => {
   describe('given pagesSize', () => {
     describe('when it called', () => {
       it('should be qual with filteredItems.length / itemsPerPage', () => {
-        wrapper.setData({
-          filteredItems: items,
-        });
         const expectedResult = Math.ceil(wrapper.vm.filteredItems.length / wrapper.vm.itemsPerPage);
         expect(wrapper.vm.pagesSize).toEqual(expectedResult);
       });
     });
-    describe('when filteredItems has not rength', () => {
+    describe('when filteredItems has not length', () => {
       it('should return INITIAL_PAGE', () => {
-        wrapper.setData({
-          filteredItems: [],
+        wrapper = shallowMount(ItemsListComponent, {
+          computed: {
+            ...computed,
+            filteredItems: () => [],
+          },
+          methods,
         });
         expect(wrapper.vm.pagesSize).toEqual(INITIAL_PAGE);
       });
@@ -68,20 +69,24 @@ describe('Given the ItemsList component', () => {
   describe('given favouriteList', () => {
     describe('when we have a list of items', () => {
       it('should return the favorites only', () => {
-        wrapper.setData({
-          filteredItems: items,
+        wrapper = shallowMount(ItemsListComponent, {
+          computed: {
+            ...computed,
+            filteredItems: () => items,
+          },
+          methods,
         });
         expect(wrapper.vm.favouriteList.length).toBe(1);
       });
     });
   });
-  describe('given finalItems', () => {
+  describe('given itemsByListType', () => {
     describe('when we have pagination enabled', () => {
       it('should return the paginatedItems', async () => {
         await wrapper.setProps({
           isPaginationEnabled: true,
         });
-        expect(wrapper.vm.finalItems).toEqual(wrapper.vm.paginatedItems);
+        expect(wrapper.vm.itemsByListType).toEqual(wrapper.vm.paginatedItems);
       });
     });
     describe('when we do not have pagination enabled', () => {
@@ -89,7 +94,7 @@ describe('Given the ItemsList component', () => {
         await wrapper.setProps({
           isPaginationEnabled: false,
         });
-        expect(wrapper.vm.finalItems).toEqual(wrapper.vm.filteredItems);
+        expect(wrapper.vm.itemsByListType).toEqual(wrapper.vm.filteredItems);
       });
     });
     describe('given hidePreviousPageButton', () => {
@@ -116,46 +121,6 @@ describe('Given the ItemsList component', () => {
         });
       });
     });
-    describe('given searchText watcher', () => {
-      describe('when searchText change', () => {
-        it('should set current page equal to 1', async () => {
-          wrapper.setData({
-            currentPage: 2,
-          });
-          expect(wrapper.vm.currentPage).toEqual(2);
-          await wrapper.setData({
-            searchText: 'Test',
-          });
-          expect(wrapper.vm.currentPage).toEqual(1);
-        });
-        it('should trigger getDebouncedFilteredItems method', async () => {
-          await wrapper.setData({
-            currentPage: 2,
-          });
-          expect(methods.getDebouncedFilteredItems).toHaveBeenCalled();
-        });
-      });
-    });
-    describe('given sortBy watcher', () => {
-      describe('when is called', () => {
-        it('should trigger getFilteredItems method', async () => {
-          await wrapper.setData({
-            sortBy: 'email',
-          });
-          expect(methods.getFilteredItems).toHaveBeenCalled();
-        });
-      });
-    });
-    describe('given sortDirection watcher', () => {
-      describe('when is called', () => {
-        it('should trigger getFilteredItems method', async () => {
-          await wrapper.setData({
-            sortDirection: 'desc',
-          });
-          expect(methods.getFilteredItems).toHaveBeenCalled();
-        });
-      });
-    });
     describe('given onClickNextPageButton', () => {
       describe('when is called', () => {
         it('should return currentPage + 1', async () => {
@@ -178,20 +143,19 @@ describe('Given the ItemsList component', () => {
         });
       });
     });
-    describe('given getDebouncedFilteredItems', () => {
+    describe('given debounceInput', () => {
       describe('when is called', () => {
         it('should trigger debounce function', async () => {
-          await wrapper.vm.getDebouncedFilteredItems();
+          await wrapper.vm.debounceInput();
           expect(debounce).toHaveBeenCalled();
         });
       });
     });
     describe('given onClickFavoriteItem', () => {
       describe('when is called', () => {
-        it('should trigger toggleFavoriteItem with getFilteredItems', () => {
+        it('should trigger toggleFavoriteItem', () => {
           wrapper.vm.onClickFavoriteItem();
           expect(methods.toggleFavoriteItem).toHaveBeenCalled();
-          expect(methods.getFilteredItems).toHaveBeenCalled();
         });
       });
     });

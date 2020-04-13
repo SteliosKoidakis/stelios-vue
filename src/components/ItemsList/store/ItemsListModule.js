@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { isArray, isNumber } from 'lodash';
+import { isArray, isNumber, isBoolean } from 'lodash';
 import {
   checkSearchResultByType,
   sortNumber,
@@ -18,6 +18,7 @@ export default {
   namespaced: true,
   state: {
     items: [],
+    isLoaded: false,
   },
   mutations: {
     setItems(state, items) {
@@ -39,6 +40,11 @@ export default {
       };
 
       Vue.set(state.items, index, newItem);
+    },
+    setLoadedStatus(state, value) {
+      if (!isBoolean(value)) return;
+
+      state.isLoaded = value;
     },
   },
   getters: {
@@ -77,8 +83,10 @@ export default {
           'https://webpublic.s3-eu-west-1.amazonaws.com/tech-test/items.json',
         );
         commit('setItems', data.items);
+        commit('setLoadedStatus', true);
       } catch {
         commit('setItems', []);
+        commit('setLoadedStatus', false);
       }
     },
     toggleFavoriteItem({ commit, state }, id) {

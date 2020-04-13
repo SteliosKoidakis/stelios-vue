@@ -3,10 +3,11 @@
     <div class="ItemComponent__image-wrapper">
       <img
         v-if="image"
+        v-lazy="image"
         :alt="title"
         :title="title"
-        :src="image"
         class="ItemComponent__image"
+        onerror="this.style.display='none'"
       >
     </div>
     <h4 v-if="title">
@@ -30,9 +31,9 @@
     </a>
     <BButton
       :variant="isFavorite ? 'success' : 'light'"
-      @click="onFavoriteItem"
+      @click="(!isFavorite || isUnlikeEnabled) && onFavoriteItem()"
     >
-      {{ isFavorite ? 'Unlike' : 'Like' }}
+      {{ isFavorite ? dislikeText : 'Like' }}
     </BButton>
   </div>
 </template>
@@ -69,9 +70,18 @@ export default {
       type: Boolean,
       default: false,
     },
+    isUnlikeEnabled: {
+      type: Boolean,
+      default: false,
+    },
     onFavoriteItem: {
       type: Function,
       default: () => ({}),
+    },
+  },
+  computed: {
+    dislikeText() {
+      return this.isUnlikeEnabled ? 'Dislike' : 'Liked';
     },
   },
 };

@@ -7,12 +7,25 @@
   &__image-wrapper {
     position: relative;
     padding-bottom: 56.25%; // aspect ration 16:9 
+    background-color: lightgoldenrodyellow;
   }
 
   &__image {
     position: absolute;
     width: 100%;
     height: 100%;
+
+    &[lazy="loading"] {
+      opacity: 0;
+    }
+
+    &[lazy="loaded"] {
+      top: 0;
+      left: 0;
+      max-height: 100%;
+      opacity: 1;
+      transition: opacity 0.8s;
+    }
   }
 
   &__description {
@@ -23,5 +36,6 @@
   &__email {
     display: block;
     padding-bottom: map-get($spacings, 3);
+    word-break: break-all;
   }
 }

@@ -34,11 +34,13 @@ describe('Given ItemsListModule', () => {
       title: 'test1',
       price: '2',
     }],
+    isLoaded: true,
   };
   const text = 'test';
   const searchableFields = ['title'];
   const mockInitialState = {
     items: [],
+    isLoaded: false,
   };
 
   const commit = jest.fn();
@@ -87,6 +89,14 @@ describe('Given ItemsListModule', () => {
         expect(stateWithItems.items).toMatchObject(itemsBefore);
         mutations.toggleFavorite(stateWithItems, []);
         expect(stateWithItems.items).toMatchObject(itemsBefore);
+      });
+    });
+  });
+  describe('given setLoadedStatus mutation', () => {
+    describe('when a boolean value passes', () => {
+      it('should update state correct', () => {
+        mutations.setLoadedStatus(stateWithItems, true);
+        expect(stateWithItems.isLoaded).toEqual(true);
       });
     });
   });
@@ -167,6 +177,7 @@ describe('Given ItemsListModule', () => {
         });
 
         expect(commit).toHaveBeenCalledWith('setItems', response.data.items);
+        expect(commit).toHaveBeenNthCalledWith(2, 'setLoadedStatus', true);
       });
       it('should trigger commit with setItems and [] on error', async () => {
         axios.get.mockImplementationOnce(() => Promise.reject(new Error()));
@@ -175,7 +186,8 @@ describe('Given ItemsListModule', () => {
           commit,
         });
 
-        expect(commit).toHaveBeenCalledWith('setItems', []);
+        expect(commit).toHaveBeenNthCalledWith(1, 'setItems', []);
+        expect(commit).toHaveBeenNthCalledWith(2, 'setLoadedStatus', false);
       });
     });
   });

@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
+
 import { BButton } from 'bootstrap-vue';
 
 import ItemComponent from './ItemComponent';
@@ -33,11 +34,29 @@ describe('Given the ItemsList component', () => {
     });
   });
   describe('when props isFavorite is true', () => {
-    it('should render Bbutton with success variant and Unlike text', async () => {
+    it('should render BButton with success variant and Unlike text', async () => {
       await wrapper.setProps({
         isFavorite: true,
       });
       expect(wrapper.element).toMatchSnapshot();
+    });
+  });
+  describe('given dislikeText computed property', () => {
+    describe('when isUnlikeEnabled equal true', () => {
+      it('should be equal to "Dislike"', async () => {
+        await wrapper.setProps({
+          isUnlikeEnabled: true,
+        });
+        expect(wrapper.vm.dislikeText).toBe('Dislike');
+      });
+    });
+    describe('when isUnlikeEnabled equal false', () => {
+      it('should be equal to "Liked"', async () => {
+        await wrapper.setProps({
+          isUnlikeEnabled: false,
+        });
+        expect(wrapper.vm.dislikeText).toBe('Liked');
+      });
     });
   });
 });

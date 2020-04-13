@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Given the ItemsList component when props isFavorite is true should render Bbutton with success variant and Unlike text 1`] = `
+exports[`Given the ItemsList component when props isFavorite is true should render BButton with success variant and Unlike text 1`] = `
 <div
   class="ItemComponent"
 >
@@ -10,7 +10,10 @@ exports[`Given the ItemsList component when props isFavorite is true should rend
     <img
       alt="title"
       class="ItemComponent__image"
-      src="image"
+      data-src="image"
+      lazy="loading"
+      onerror="this.style.display='none'"
+      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
       title="title"
     />
   </div>
@@ -53,7 +56,7 @@ exports[`Given the ItemsList component when props isFavorite is true should rend
     variant="success"
   >
     
-    Unlike
+    Liked
   
   </bbutton-stub>
 </div>
@@ -69,7 +72,10 @@ exports[`Given the ItemsList component when props pass should render the correct
     <img
       alt="title"
       class="ItemComponent__image"
-      src="image"
+      data-src="image"
+      lazy="loading"
+      onerror="this.style.display='none'"
+      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
       title="title"
     />
   </div>

@@ -4,6 +4,7 @@ import '@/styles/index.scss';
 import Vue from 'vue';
 
 import Vuex from 'vuex';
+import VueLazyload from 'vue-lazyload';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +15,9 @@ import App from './App';
 
 Vue.config.productionTip = false;
 
+Vue.use(VueLazyload, {
+  error: '/',
+});
 Vue.use(Vuex);
 Vue.use(ModalPlugin);
 

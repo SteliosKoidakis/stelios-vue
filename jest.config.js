@@ -8,4 +8,5 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: ['**/*.spec.js'],
+  setupFiles: ['<rootDir>/setup-test'],
 };

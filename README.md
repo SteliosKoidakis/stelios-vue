@@ -1,4 +1,4 @@
-# stelios-vue
+# Stelios-vue item manager
 
 ## Project setup
 ```
@@ -20,5 +20,11 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Unit tests
+```
+yarn test
+
+yarn test-coverage --> for the coverage
+
+yarn test-watch  --> watch mode 
+```
