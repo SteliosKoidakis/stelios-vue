@@ -1,4 +1,5 @@
 import storeObject from '@/store';
+import '@/styles/index.scss';
 
 import Vue from 'vue';
 

@@ -1,27 +1,33 @@
 <template>
-  <div class="ItemComponent d-flex flex-column">
-    <img
-      v-if="image"
-      :alt="title"
-      :title="title"
-      :src="image"
-      class="rounded img-fluid"
-    >
+  <div class="ItemComponent">
+    <div class="ItemComponent__image-wrapper">
+      <img
+        v-if="image"
+        :alt="title"
+        :title="title"
+        :src="image"
+        class="ItemComponent__image"
+      >
+    </div>
     <h4 v-if="title">
       {{ title }}
     </h4>
     <p
       v-if="description"
-      class="flex-grow-1"
+      class="ItemComponent__description"
     >
       {{ description }}
     </p>
     <p v-if="price">
       {{ price }}
     </p>
-    <p v-if="email">
+    <a
+      v-if="email"
+      class="ItemComponent__email"
+      :href="`mailto:${email}`"
+    >
       {{ email }}
-    </p>
+    </a>
     <BButton
       :variant="isFavorite ? 'success' : 'light'"
       @click="onFavoriteItem"

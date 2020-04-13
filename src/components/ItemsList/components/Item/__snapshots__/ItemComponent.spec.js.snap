@@ -2,40 +2,47 @@
 
 exports[`Given the ItemsList component when props isFavorite is true should render Bbutton with success variant and Unlike text 1`] = `
 <div
-  class="ItemComponent d-flex flex-column"
+  class="ItemComponent"
 >
-  <img
-    alt="title"
-    class="rounded img-fluid"
-    src="image"
-    title="title"
-  />
+  <div
+    class="ItemComponent__image-wrapper"
+  >
+    <img
+      alt="title"
+      class="ItemComponent__image"
+      src="image"
+      title="title"
+    />
+  </div>
    
-  <div>
+  <h4>
     
     title
   
-  </div>
+  </h4>
    
-  <div
-    class="flex-grow-1"
+  <p
+    class="ItemComponent__description"
   >
     
     description
   
-  </div>
+  </p>
    
-  <div>
+  <p>
     
     price
   
-  </div>
+  </p>
    
-  <div>
+  <a
+    class="ItemComponent__email"
+    href="mailto:email"
+  >
     
     email
   
-  </div>
+  </a>
    
   <bbutton-stub
     event="click"
@@ -54,40 +61,47 @@ exports[`Given the ItemsList component when props isFavorite is true should rend
 
 exports[`Given the ItemsList component when props pass should render the correct output 1`] = `
 <div
-  class="ItemComponent d-flex flex-column"
+  class="ItemComponent"
 >
-  <img
-    alt="title"
-    class="rounded img-fluid"
-    src="image"
-    title="title"
-  />
+  <div
+    class="ItemComponent__image-wrapper"
+  >
+    <img
+      alt="title"
+      class="ItemComponent__image"
+      src="image"
+      title="title"
+    />
+  </div>
    
-  <div>
+  <h4>
     
     title
   
-  </div>
+  </h4>
    
-  <div
-    class="flex-grow-1"
+  <p
+    class="ItemComponent__description"
   >
     
     description
   
-  </div>
+  </p>
    
-  <div>
+  <p>
     
     price
   
-  </div>
+  </p>
    
-  <div>
+  <a
+    class="ItemComponent__email"
+    href="mailto:email"
+  >
     
     email
   
-  </div>
+  </a>
    
   <bbutton-stub
     event="click"

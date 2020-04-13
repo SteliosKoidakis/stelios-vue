@@ -1,0 +1,16 @@
+$spacer: 16px !default;
+
+$spacers: () !default;
+
+$spacings: map-merge(
+  (
+    0: 0,
+    1: ($spacer * 0.25), /* 4px*/
+    2: ($spacer * 0.5),  /* 8px*/
+    3: $spacer,          /* 16px*/
+    4: ($spacer * 1.5),  /* 24px*/
+    5: ($spacer * 2),    /* 32px*/
+    6: ($spacer * 3)     /* 48px*/
+  ),
+  $spacers
+);

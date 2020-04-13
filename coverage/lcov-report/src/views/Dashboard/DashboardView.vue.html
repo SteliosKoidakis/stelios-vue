@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -109,12 +109,7 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,12 +141,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,9 +154,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,29 +162,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
-  &lt;BContainer&gt;
-    &lt;BRow&gt;
-      &lt;BCol&gt;
-        &lt;div&gt;
-          &lt;BButton @click="$bvModal.show('favorite-items')"&gt;
-            Should Favorite List
-          &lt;/BButton&gt;
+  &lt;BContainer class="DashboardView"&gt;
+    &lt;BRow class="DashboardView__row"&gt;
+      &lt;BCol class="DashboardView__favorite-button"&gt;
+        &lt;BButton @click="$bvModal.show('favorite-items')"&gt;
+          Should Favorite List
+        &lt;/BButton&gt;
 &nbsp;
-          &lt;BModal
-            id="favorite-items"
-            title="Favorite items"
-            hide-backdrop
-          &gt;
-            &lt;ItemsListComponent
-              :is-sorting-enabled="false"
-              :is-pagination-enabled="false"
-              is-favourite-list
-            /&gt;
-          &lt;/BModal&gt;
-        &lt;/div&gt;
+        &lt;BModal
+          id="favorite-items"
+          title="Favorite items"
+          size="xl"
+          hide-backdrop
+          ok-only
+        &gt;
+          &lt;ItemsListComponent
+            :is-sorting-enabled="false"
+            :is-pagination-enabled="false"
+            is-favourite-list
+          /&gt;
+        &lt;/BModal&gt;
       &lt;/BCol&gt;
     &lt;/BRow&gt;
-    &lt;BRow&gt;
+    &lt;BRow class="DashboardView__row"&gt;
       &lt;BCol&gt;
         &lt;ItemsListComponent /&gt;
       &lt;/BCol&gt;
@@ -202,13 +192,11 @@
   &lt;/BContainer&gt;
 &lt;/template&gt;
 &lt;script&gt;
-import { mapActions } from 'vuex';
 import {
   BButton, BContainer, BCol, BModal, BRow,
 } from 'bootstrap-vue';
 &nbsp;
 import { ItemsListComponent } from '@/components';
-import { VUEX_MODULES } from '@/constants';
 &nbsp;
 export default {
   name: 'DashboardView',
@@ -220,14 +208,11 @@ export default {
     BRow,
     ItemsListComponent,
   },
-  async created() {
-    await this.getItems();
-  },
-  methods: {
-    ...mapActions(VUEX_MODULES.ItemsListModule, ['getItems']),
-  },
 };
 &lt;/script&gt;
+&lt;style lang="scss" scoped&gt;
+  @import './DashboardView';
+&lt;/style&gt;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -235,7 +220,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Apr 11 2020 16:59:39 GMT+0200 (Central European Summer Time)
+                at Mon Apr 13 2020 16:12:51 GMT+0200 (Central European Summer Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

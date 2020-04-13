@@ -1,0 +1,27 @@
+$dashboard-view--row-spacer: map-get($spacings, 4) !default;
+$dashboard-view--row-spacer-mobile: map-get($spacings, 2) !default;
+
+.DashboardView {
+  padding-top: $dashboard-view--row-spacer-mobile; 
+
+  @include media-breakpoint-up(md) {
+    padding-top: $dashboard-view--row-spacer;
+  }
+
+  &__favorite-button{
+    display: flex;
+    justify-content: center;
+    
+    @include media-breakpoint-up(md) {
+      justify-content: start;
+    }
+  }
+
+  &__row {
+    padding-bottom: $dashboard-view--row-spacer-mobile; 
+
+    @include media-breakpoint-up(md) {
+      padding-bottom: $dashboard-view--row-spacer;
+    }
+  }
+}

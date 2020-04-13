@@ -1,9 +1,11 @@
 import { shallowMount } from '@vue/test-utils';
 
-import { isArray } from 'lodash';
+import { debounce } from 'lodash';
 
 import { INITIAL_PAGE } from '@/constants';
 import ItemsListComponent from './ItemsListComponent';
+
+jest.mock('lodash');
 
 const items = [
   { title: 'My title 1' },
@@ -15,7 +17,9 @@ const computed = {
 };
 const methods = {
   toggleFavoriteItem: jest.fn(),
+  getDebouncedFilteredItems: jest.fn(),
   getFilteredItems: jest.fn(),
+  getItems: jest.fn(),
 };
 
 describe('Given the ItemsList component', () => {
@@ -57,7 +61,7 @@ describe('Given the ItemsList component', () => {
         expect(wrapper.vm.paginatedItems.length + 1).toBeLessThanOrEqual(wrapper.vm.itemsPerPage);
       });
       it('should return an array', () => {
-        expect(isArray(wrapper.vm.paginatedItems)).toBe(true);
+        expect(wrapper.vm.paginatedItems).toBeInstanceOf(Array);
       });
     });
   });
@@ -124,9 +128,29 @@ describe('Given the ItemsList component', () => {
           });
           expect(wrapper.vm.currentPage).toEqual(1);
         });
-        it('should trigger getFilteredItems method', async () => {
+        it('should trigger getDebouncedFilteredItems method', async () => {
           await wrapper.setData({
             currentPage: 2,
+          });
+          expect(methods.getDebouncedFilteredItems).toHaveBeenCalled();
+        });
+      });
+    });
+    describe('given sortBy watcher', () => {
+      describe('when is called', () => {
+        it('should trigger getFilteredItems method', async () => {
+          await wrapper.setData({
+            sortBy: 'email',
+          });
+          expect(methods.getFilteredItems).toHaveBeenCalled();
+        });
+      });
+    });
+    describe('given sortDirection watcher', () => {
+      describe('when is called', () => {
+        it('should trigger getFilteredItems method', async () => {
+          await wrapper.setData({
+            sortDirection: 'desc',
           });
           expect(methods.getFilteredItems).toHaveBeenCalled();
         });
@@ -154,9 +178,17 @@ describe('Given the ItemsList component', () => {
         });
       });
     });
+    describe('given getDebouncedFilteredItems', () => {
+      describe('when is called', () => {
+        it('should trigger debounce function', async () => {
+          await wrapper.vm.getDebouncedFilteredItems();
+          expect(debounce).toHaveBeenCalled();
+        });
+      });
+    });
     describe('given onClickFavoriteItem', () => {
       describe('when is called', () => {
-        it('should triggert toggleFavoriteItem with getFilteredItems', () => {
+        it('should trigger toggleFavoriteItem with getFilteredItems', () => {
           wrapper.vm.onClickFavoriteItem();
           expect(methods.toggleFavoriteItem).toHaveBeenCalled();
           expect(methods.getFilteredItems).toHaveBeenCalled();

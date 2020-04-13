@@ -1,0 +1,28 @@
+$items-list-view--spacer: map-get($spacings, 5) !default;
+$items-list-view--spacer-mobile: map-get($spacings, 3) !default;
+
+
+.ItemsListComponent {
+  &__row {
+    padding-bottom: $items-list-view--spacer-mobile; 
+
+    @include media-breakpoint-up(md) {
+      padding-bottom: $items-list-view--spacer;
+    }
+  }
+
+  &__sort-item {
+    padding-bottom: $items-list-view--spacer-mobile;
+
+    @include media-breakpoint-up(md) {
+     padding-bottom: 0;
+    }
+  }
+  &__previous-button {
+    margin-right: map-get($spacings, 3);
+  }
+
+  &__current-page {
+    text-align: right;
+  }
+}

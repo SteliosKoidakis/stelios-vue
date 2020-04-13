@@ -1,59 +1,82 @@
 <template>
-  <div>
-    <BRow>
-      <BCol cols="6">
+  <div class="ItemsListComponent">
+    <BRow class="ItemsListComponent__row">
+      <BCol
+        md="4"
+        class="ItemsListComponent__search-input"
+      >
         <BFormInput
           v-model="searchText"
-          placeholder="Enter your name"
+          placeholder="Search for a product"
         />
       </BCol>
+    </BRow>
+    <BRow
+      v-if="isSortingEnabled"
+      class="ItemsListComponent__row"
+    >
       <BCol
-        v-if="isSortingEnabled"
-        cols="6"
+        md="6"
       >
+        <label>
+          <strong>Sort By</strong>
+        </label>
         <BFormRadioGroup
           v-model="sortBy"
+          class="ItemsListComponent__sort-item"
           :options="sortOptions"
-          class="mb-3"
           value-field="value"
           text-field="value"
         />
       </BCol>
       <BCol
-        v-if="isSortingEnabled"
-        cols="6"
+        md="6"
       >
+        <label>
+          <strong>Sort Direction</strong>
+        </label>
         <BFormRadioGroup
           v-model="sortDirection"
           :options="sortDirectionOptions"
-          class="mb-3"
           value-field="value"
           text-field="value"
         />
       </BCol>
     </BRow>
-    <BRow v-if="isPaginationEnabled">
-      <BCol>
+    <BRow
+      v-if="isPaginationEnabled"
+      class="ItemsListComponent__row"
+    >
+      <BCol md="8">
         <BButton
+          squared
+          variant="outline-secondary"
+          class="ItemsListComponent__previous-button"
           :disabled="hidePreviousPageButton"
           @click="onClickPreviousPageButton"
         >
           Previous Page
         </BButton>
         <BButton
+          squared
+          variant="outline-secondary"
           :disabled="hideNextPageButton"
           @click="onClickNextPageButton"
         >
           Next Page
         </BButton>
       </BCol>
+      <BCol
+        md="4"
+        class="ItemsListComponent__current-page"
+      >
+        <span>{{ currentPage }} / {{ pagesSize }}</span>
+      </BCol>
     </BRow>
-    <BRow>
+    <BRow class="ItemsListComponent__row">
       <BCol
         v-for="item in isFavouriteList ? favouriteList : finalItems"
         :key="item.title"
-        md="4"
-        class="d-flex pb-4"
       >
         <ItemComponent
           :title="item.title"
@@ -64,11 +87,6 @@
           :is-favorite="item.isFavorite"
           :on-favorite-item="() =>onClickFavoriteItem(item.title)"
         />
-      </BCol>
-    </BRow>
-    <BRow v-if="isPaginationEnabled">
-      <BCol>
-        <span>{{ currentPage }} / {{ pagesSize }}</span>
       </BCol>
     </BRow>
   </div>
@@ -180,10 +198,7 @@ export default {
   watch: {
     searchText() {
       this.currentPage = 1;
-      this.getFilteredItems();
-    },
-    searchableFields() {
-      this.getFilteredItems();
+      this.getDebouncedFilteredItems();
     },
     sortBy() {
       this.getFilteredItems();
@@ -195,25 +210,29 @@ export default {
   created() {
     this.sortItems = SEARCH_FIELDS_ARRAY;
   },
-  mounted() {
+  async mounted() {
+    await this.getItems();
     this.getFilteredItems();
   },
   methods: {
-    ...mapActions(VUEX_MODULES.ItemsListModule, ['toggleFavoriteItem']),
+    ...mapActions(VUEX_MODULES.ItemsListModule, ['toggleFavoriteItem', 'getItems']),
     onClickNextPageButton() {
       this.currentPage += 1;
     },
     onClickPreviousPageButton() {
       this.currentPage -= 1;
     },
-    getFilteredItems: debounce(function debouncegetFilteredItems() {
+    getDebouncedFilteredItems: debounce(function debounceFilteredItems() {
+      this.getFilteredItems();
+    }, DELAY),
+    getFilteredItems() {
       this.filteredItems = this.getItemsByFilters({
         text: this.searchText,
         searchableFields: this.searchableFields,
         sortBy: this.sortBy,
         sortDirection: this.sortDirection,
       });
-    }, DELAY),
+    },
     onClickFavoriteItem(title) {
       this.toggleFavoriteItem(title);
       this.getFilteredItems();
@@ -221,3 +240,6 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  @import './ItemsListComponent';
+</style>
