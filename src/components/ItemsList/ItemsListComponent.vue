@@ -80,7 +80,6 @@
       <BCol
         v-for="item in isFavouriteList ? favouriteList : itemsByListType"
         :key="item.title"
-        md="3"
       >
         <ItemComponent
           :title="item.title"

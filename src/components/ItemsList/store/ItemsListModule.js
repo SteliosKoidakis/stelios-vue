@@ -1,5 +1,3 @@
-import Vue from 'vue';
-import { isArray, isNumber, isBoolean } from 'lodash';
 import {
   checkSearchResultByType,
   sortNumber,
@@ -11,6 +9,12 @@ import {
   SORT_DIRECTIONS,
   SEARCH_FIELDS_ARRAY,
 } from '@/constants';
+
+import Vue from 'vue';
+
+import {
+  findIndex, isArray, isNumber, isBoolean,
+} from 'lodash';
 
 import axios from 'axios';
 
@@ -90,7 +94,7 @@ export default {
       }
     },
     toggleFavoriteItem({ commit, state }, id) {
-      const index = state.items.findIndex((item) => item.title === id);
+      const index = findIndex(state.items, (item) => item.title === id);
 
       commit('toggleFavorite', index);
     },
