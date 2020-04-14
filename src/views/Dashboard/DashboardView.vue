@@ -5,7 +5,6 @@
         <BButton @click="$bvModal.show('favorite-items')">
           Should Favorite List
         </BButton>
-
         <BModal
           id="favorite-items"
           title="Favorite items"
@@ -28,6 +27,7 @@
     </BRow>
   </BContainer>
 </template>
+
 <script>
 import {
   BButton, BContainer, BCol, BModal, BRow,
@@ -47,6 +47,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
   @import './DashboardView';
 </style>

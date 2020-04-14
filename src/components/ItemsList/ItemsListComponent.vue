@@ -1,7 +1,7 @@
 <template>
   <div class="ItemsListComponent">
     <BRow class="ItemsListComponent__row">
-      <!-- could happen through a prop to be more functional -->
+      <!-- TODO: could happen through a prop to be more functional -->
       <BCol
         :md="isFavouriteList ? '12' : '6'"
         class="ItemsListComponent__search-input"
@@ -28,6 +28,7 @@
           :options="sortOptions"
           value-field="value"
           text-field="value"
+          @change="setInitialPage"
         />
       </BCol>
       <BCol
@@ -41,6 +42,7 @@
           :options="sortDirectionOptions"
           value-field="value"
           text-field="value"
+          @change="setInitialPage"
         />
       </BCol>
     </BRow>
@@ -53,7 +55,7 @@
           squared
           variant="outline-secondary"
           class="ItemsListComponent__previous-button"
-          :disabled="hidePreviousPageButton"
+          :disabled="isPreviousPageButtonHidden"
           @click="onClickPreviousPageButton"
         >
           Previous Page
@@ -61,7 +63,7 @@
         <BButton
           squared
           variant="outline-secondary"
-          :disabled="hideNextPageButton"
+          :disabled="isNextPageButtonHidden"
           @click="onClickNextPageButton"
         >
           Next Page
@@ -181,7 +183,7 @@ export default {
   computed: {
     ...mapGetters(VUEX_MODULES.ItemsListModule, ['getItemsByFilters']),
     ...mapState(VUEX_MODULES.ItemsListModule, {
-      statusIsLoaded: (state) => state.isLoaded,
+      isItemsListLoaded: (state) => state.isLoaded,
     }),
     pagesSize() {
       if (!this.filteredItems.length) {
@@ -201,10 +203,10 @@ export default {
     itemsByListType() {
       return this.isPaginationEnabled ? this.paginatedItems : this.filteredItems;
     },
-    hidePreviousPageButton() {
+    isPreviousPageButtonHidden() {
       return this.currentPage === 1;
     },
-    hideNextPageButton() {
+    isNextPageButtonHidden() {
       return this.pagesSize === this.currentPage;
     },
     filteredItems() {
@@ -223,7 +225,7 @@ export default {
     this.sortItems = SEARCH_FIELDS_ARRAY;
   },
   async mounted() {
-    if (!this.statusIsLoaded) {
+    if (!this.isItemsListLoaded) {
       await this.getItems();
     }
   },
@@ -238,7 +240,11 @@ export default {
     onClickFavoriteItem(title) {
       this.toggleFavoriteItem(title);
     },
+    setInitialPage() {
+      this.currentPage = INITIAL_PAGE;
+    },
     debounceInput: debounce(function debounceInput(text) {
+      this.setInitialPage();
       this.searchText = text;
     }, DELAY),
   },

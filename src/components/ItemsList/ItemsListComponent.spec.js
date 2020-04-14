@@ -1,7 +1,9 @@
+import { INITIAL_PAGE } from '@/constants';
+
 import { shallowMount } from '@vue/test-utils';
 
 import { debounce } from 'lodash';
-import { INITIAL_PAGE } from '@/constants';
+
 import ItemsListComponent from './ItemsListComponent';
 
 jest.mock('lodash');
@@ -13,7 +15,7 @@ const items = [
 
 const computed = {
   getItemsByFilters: () => () => (items),
-  statusIsLoaded: () => () => false,
+  isItemsListLoaded: () => () => false,
   filteredItems: () => (items),
 };
 const methods = {
@@ -43,7 +45,7 @@ describe('Given the ItemsList component', () => {
         expect(wrapper.vm.pagesSize).toEqual(expectedResult);
       });
     });
-    describe('when filteredItems has not length', () => {
+    describe('when filteredItems has nos length', () => {
       it('should return INITIAL_PAGE', () => {
         wrapper = shallowMount(ItemsListComponent, {
           computed: {
@@ -89,7 +91,7 @@ describe('Given the ItemsList component', () => {
         expect(wrapper.vm.itemsByListType).toEqual(wrapper.vm.paginatedItems);
       });
     });
-    describe('when we do not have pagination enabled', () => {
+    describe('when we have pagination disabled', () => {
       it('should return the filteredItems', async () => {
         await wrapper.setProps({
           isPaginationEnabled: false,
@@ -97,27 +99,27 @@ describe('Given the ItemsList component', () => {
         expect(wrapper.vm.itemsByListType).toEqual(wrapper.vm.filteredItems);
       });
     });
-    describe('given hidePreviousPageButton', () => {
+    describe('given isPreviousPageButtonHidden', () => {
       describe('when current page is equal 1', () => {
         it('should return true', async () => {
           wrapper.setData({
             currentPage: 1,
           });
-          expect(wrapper.vm.hidePreviousPageButton).toBe(true);
+          expect(wrapper.vm.isPreviousPageButtonHidden).toBe(true);
         });
       });
     });
-    describe('given hideNextPageButton', () => {
+    describe('given isNextPageButtonHidden', () => {
       describe('when current page called', () => {
         it('should return true if is equal to pagesSize', async () => {
           wrapper.setData({
             currentPage: 1,
           });
-          expect(wrapper.vm.hideNextPageButton).toBe(true);
+          expect(wrapper.vm.isNextPageButtonHidden).toBe(true);
           wrapper.setData({
             currentPage: 2,
           });
-          expect(wrapper.vm.hideNextPageButton).toBe(false);
+          expect(wrapper.vm.isNextPageButtonHidden).toBe(false);
         });
       });
     });
@@ -159,7 +161,16 @@ describe('Given the ItemsList component', () => {
         });
       });
     });
+    describe('given setInitialPage', () => {
+      describe('when is called', () => {
+        it('should set currentPage to the INITIAL_PAGE', () => {
+          wrapper.setData({
+            currentPage: 2,
+          });
+          wrapper.vm.setInitialPage();
+          expect(wrapper.vm.currentPage).toBe(INITIAL_PAGE);
+        });
+      });
+    });
   });
 });
-
-// todo: add units for UI

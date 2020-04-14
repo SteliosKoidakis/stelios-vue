@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 
 import App from './App';
 
-import Dashboard from './views/Dashboard/DashboardView';
+import DashboardView from './views/Dashboard/DashboardView';
 
 describe('Given the App component', () => {
   let wrapper;
@@ -14,8 +14,8 @@ describe('Given the App component', () => {
     it('should not break', () => {
       expect(wrapper).toBeDefined();
     });
-    it('should render the Dashboard component', () => {
-      expect(wrapper.find(Dashboard).exists()).toBe(true);
+    it('should render the DashboardView component', () => {
+      expect(wrapper.find(DashboardView).exists()).toBe(true);
     });
   });
 });

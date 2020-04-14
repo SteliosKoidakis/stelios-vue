@@ -49,9 +49,9 @@ describe('Give utils', () => {
     });
   });
   describe('given getObjectByDirection function', () => {
-    describe('when all parameters pass', () => {
-      it('should return the correct object', () => {
-        let result = getObjectByDirection({
+    describe('when isDescSortDirection equal true', () => {
+      it('should return currentItem equal to 2 and nextItem equal to 1', () => {
+        const result = getObjectByDirection({
           isDescSortDirection: true,
           currentItem: 1,
           nextItem: 2,
@@ -60,7 +60,11 @@ describe('Give utils', () => {
           currentItem: 2,
           nextItem: 1,
         });
-        result = getObjectByDirection({
+      });
+    });
+    describe('when isDescSortDirection equal false', () => {
+      it('should return currentItem equal to 1 and nextItem equal to 2', () => {
+        const result = getObjectByDirection({
           isDescSortDirection: false,
           currentItem: 1,
           nextItem: 2,
@@ -72,7 +76,7 @@ describe('Give utils', () => {
       });
     });
     describe('when unexpected parameters pass', () => {
-      it('should return the correct object', () => {
+      it('should return the object with undefined values', () => {
         const result = getObjectByDirection({
           isDescSortDirection: undefined,
           currentItem: undefined,

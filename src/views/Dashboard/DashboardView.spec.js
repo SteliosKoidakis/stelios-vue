@@ -1,17 +1,18 @@
+import { ItemsListComponent } from '@/components';
+
 import { shallowMount } from '@vue/test-utils';
 
 import { BContainer, BRow } from 'bootstrap-vue';
 
-import { ItemsListComponent } from '@/components';
-import Dashboard from './DashboardView';
+import DashboardView from './DashboardView';
 
 const methods = {
   getItems: () => [],
 };
-describe('Given the Dashboard component', () => {
+describe('Given the DashboardView component', () => {
   let wrapper;
   beforeEach(() => {
-    wrapper = shallowMount(Dashboard, {
+    wrapper = shallowMount(DashboardView, {
       methods,
     });
   });

@@ -1,18 +1,14 @@
 <template>
-  <Dashboard />
+  <DashboardView />
 </template>
 
 <script>
-import Dashboard from '@/views/Dashboard/DashboardView';
+import DashboardView from '@/views/Dashboard/DashboardView';
 
 export default {
   name: 'App',
   components: {
-    Dashboard,
+    DashboardView,
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  @import './App';
-</style>

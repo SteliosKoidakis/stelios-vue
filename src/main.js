@@ -4,12 +4,13 @@ import '@/styles/index.scss';
 import Vue from 'vue';
 
 import Vuex from 'vuex';
+
 import VueLazyload from 'vue-lazyload';
+
+import { ModalPlugin } from 'bootstrap-vue';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { ModalPlugin } from 'bootstrap-vue';
 
 import App from './App';
 
